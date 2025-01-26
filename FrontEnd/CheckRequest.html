@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ThingSpeak Water Tank Level</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      .tank {
+        width: 100px;
+        height: 300px;
+        border: 2px solid #000;
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+        margin: 20px auto;
+      }
+
+      .water {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        background-color: #00f;
+        transition: height 0.5s;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>ThingSpeak Water Tank Level</h1>
+      <button id="fetchButton">Fetch Data</button>
+      <div class="tank">
+        <div class="water" id="waterLevel" style="height: 0%"></div>
+      </div>
+      <div id="dataContainer"></div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const fetchButton = document.getElementById("fetchButton");
+        const waterLevel = document.getElementById("waterLevel");
+        const dataContainer = document.getElementById("dataContainer");
+
+        fetchButton.addEventListener("click", () => {
+          const url =
+            "https://api.thingspeak.com/channels/2620724/feeds.json?api_key=UWZEFFPMX82YKUX5&results=2";
+
+          fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+              dataContainer.innerHTML = ""; // Clear previous data
+              data.feeds.forEach((feed) => {
+                const entry = document.createElement("div");
+                entry.className = "entry";
+                entry.innerHTML = `
+                  <p>Entry ID: ${feed.entry_id}</p>
+                  <p>Field1: ${feed.field1}</p>
+                  <p>Created At: ${new Date(
+                    feed.created_at
+                  ).toLocaleString()}</p>
+                `;
+                dataContainer.appendChild(entry);
+              });
+
+              // Update water level based on the latest field1 value
+              const latestFeed = data.feeds[data.feeds.length - 1];
+              const field1Value = parseFloat(latestFeed.field1);
+              const waterHeight = Math.min(Math.max(field1Value, 0), 100); // Ensure value is between 0 and 100
+              waterLevel.style.height = `${waterHeight}%`;
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+      });
+    </script>
+  </body>
+</html>

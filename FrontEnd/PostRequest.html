@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LED On/Off Button</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="led" id="led"></div>
+      <div>LED CHECKING</div>
+      <input type="number" id="fieldValue" placeholder="Enter field value" />
+      <button id="toggleButton">Send Value</button>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const led = document.getElementById("led");
+        const toggleButton = document.getElementById("toggleButton");
+        const fieldValueInput = document.getElementById("fieldValue");
+        let isOn = false;
+
+        toggleButton.addEventListener("click", () => {
+          const field1Value = fieldValueInput.value;
+          if (field1Value === "") {
+            alert("Please enter a value");
+            return;
+          }
+
+          isOn = !isOn;
+          led.style.backgroundColor = isOn ? "green" : "red";
+          toggleButton.textContent = isOn ? "Turn Off" : "Turn On";
+
+          // Send data to ThingSpeak
+          const apiKey = "MDMJU4F1SDEPJT85";
+          const url = `https://api.thingspeak.com/update?api_key=${apiKey}&field1=${field1Value}`;
+
+          fetch(url)
+            .then((response) => response.json())
+            .then((data) => console.log("Data sent to ThingSpeak:", data))
+            .catch((error) => console.error("Error:", error));
+        });
+      });
+    </script>
+  </body>
+</html>
