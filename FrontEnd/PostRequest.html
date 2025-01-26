@@ -5,11 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LED On/Off Button</title>
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f8ff;
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .navbar {
+        width: 100%;
+        background-color: #007bff;
+        padding: 10px 0;
+        text-align: right;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+      }
+
+      .navbar a {
+        color: white;
+        text-decoration: none;
+        padding: 14px 20px;
+        display: inline-block;
+      }
+
+      .navbar a:hover {
+        background-color: #0056b3;
+      }
+
+      .container {
+        text-align: center;
+        margin-top: 60px; /* Adjust for the fixed navbar height */
+      }
+
+      .led {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: red;
+        margin: 20px auto;
+      }
+
+      input {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
   </head>
   <body>
+    <div class="navbar">
+      <a href="CheckRequest.html">Check Request</a>
+      <a href="PostRequest.html">Post Request</a>
+    </div>
     <div class="container">
+      <h1>LED On/Off Button</h1>
       <div class="led" id="led"></div>
-      <div>LED CHECKING</div>
       <input type="number" id="fieldValue" placeholder="Enter field value" />
       <button id="toggleButton">Send Value</button>
     </div>
